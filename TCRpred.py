@@ -38,6 +38,8 @@ if __name__ == '__main__':
     parser.add_argument('--input', default=None)
     parser.add_argument('--output', default=None)
     parser.add_argument('--model', default= None)
+    ### for large test set, increase the batch size
+    parser.add_argument('--batch_size', default= 1)
     args = parser.parse_args()
 
     if args.help:
@@ -60,18 +62,24 @@ if __name__ == '__main__':
     #########################################################
 
 
-    ##to make it compatible with previous format
+    ##to make input compatible with TCRpred format
     args.train = None
     args.test = args.input
     args.out = args.output
     args.epitope = args.model.split("_")[-1]
     args.path_checkpoint = os.path.join(path_pretrained_models, 'model_'+args.model+'.ckpt')
     args.epochs = 10
-    args.batch_size = 1
     args.num_workers = 1
     args.gpus = None
     args.chain = 'AB'
     #print(args)
+
+    if os.path.exists(args.test) == False:
+        print("*** Error! Test file not found. Is --test {0} a valid test file? ***".format(args.test))
+        sys.exit(0)
+    if (args.path_checkpoint == None) or (os.path.exists(args.path_checkpoint) == False):
+        print("*** Error! Model not loaded. Is {0} a valid TCRpred model name? For help, run ./TCRpred.py --help ***".format(args.model))
+        sys.exit(0)
 
     #### determine info epitope
     df_info  = pd.read_csv(os.path.join(path_pretrained_models, 'info_models.csv'))
@@ -125,16 +133,11 @@ if __name__ == '__main__':
 
     #2. Predictions
     if args.test != None:
-        if os.path.exists(args.test) == False:
-            print("*** Error! Test file not found. Is --test {0} a valid test file? ***".format(args.test))
-            sys.exit(0)
-        if (args.path_checkpoint == None) or (os.path.exists(args.path_checkpoint) == False):
-            print("*** Error! Model not loaded. Is --path_checkpoint {0} a valid checkpoint? ***".format(args.path_checkpoint))
-            sys.exit(0)
+
         print("#########################################################################")
         print("###### TCRpred: sequence-based predictor of TCR-pMHC interactions  ######")
         print("#########################################################################")
-        print("TCRpred model {0} for {1}, ".format(args.model, args.host))
+        print("TCRpred model {0} ".format(args.model))
         print("Computing binding predictions for {0}", format(args.test))
 
         #reload model from checkpoint
