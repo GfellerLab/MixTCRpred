@@ -16,6 +16,7 @@ from torch.utils.data import DataLoader, random_split
 import src.utils
 import src.models
 import src.dataloaders
+import wget
 
 
 #to supprime all warning message and pytorchlighting info
@@ -39,7 +40,10 @@ if __name__ == '__main__':
     parser.add_argument('--output', default=None)
     parser.add_argument('--model', default= None)
     ### for large test set, increase the batch size
-    parser.add_argument('--batch_size', default= 1)
+    parser.add_argument('--batch_size', type = int, default= 1)
+    ### to download the model from Zenodo
+    parser.add_argument('--download', action = 'store_true')
+    parser.add_argument('--download_high', action = 'store_true')
     args = parser.parse_args()
 
     if args.help:
@@ -53,6 +57,21 @@ if __name__ == '__main__':
         df  = pd.read_csv(os.path.join(path_pretrained_models, 'info_models.csv'))
         print(tabulate(df.drop(columns = 'AUC_5fold'), headers='keys', tablefmt='psql'))
         sys.exit(0)
+
+    #to download all the pretrained model
+    if (args.download) | (args.download_high):
+        df  = pd.read_csv(os.path.join(path_pretrained_models, 'info_models.csv'))
+        if (args.download_high):
+            min_num_train = 50
+            df  = df.loc[df['Number_training_abTCR'] >= min_num_train]
+            print('Downloading only {0} high-confidence model (at least {1} training abTCR)'.format(len(df), min_num_train))
+        for model_name in df['TCRpred_model_name'].values:
+            if os.path.exists( os.path.join(path_pretrained_models, "model_{0}.ckpt".format(model_name))):
+                print("{0} TCRpred model already downloaded".format(model_name))
+            else:
+                url = "https://zenodo.org/record/7930623/files/model_"+model_name+".ckpt"
+                print("Downloading TCRpred model for {0}".format(model_name))
+                filename = wget.download(url, out = path_pretrained_models)
 
     #################################################
     ##########################################for a quick test
@@ -135,7 +154,7 @@ if __name__ == '__main__':
     if args.test != None:
 
         print("#########################################################################")
-        print("###### TCRpred: sequence-based predictor of TCR-pMHC interactions  ######")
+        print("###### TCRpred: a sequence-based predictor of TCR-pMHC interactions  ####")
         print("#########################################################################")
         print("TCRpred model {0} ".format(args.model))
         print("Computing binding predictions for {0}", format(args.test))
@@ -190,8 +209,9 @@ if __name__ == '__main__':
         f.write("##############################################################################################\n")
         f.close()
 
-
         print("The results are stored in {0}.".format(args.out))
-        print("If TCRpred is useful for your research, please cite our paper: (XXXX). Thanks!")
+
+        #round
+        df_res = df_res.round(5)
 
         df_res.to_csv(args.out, index = False, mode = 'a')

@@ -1,8 +1,20 @@
 # TCRpred
-TCRpred is a sequence-based TCR-epitope interaction predictor. TCR binding predictions are currently possible for 146 pMHCs.
-The paper describing the TCR-pMHC dataset, the architecture of the TCRpred as well as the predictive performances and potential application is available at [here](XXXX)
+TCRpred is a sequence-based TCR-pMHC interaction predictor. 
+TCR binding predictions are currently possible for 146 pMHCs. 
+For 43 pMHC robust predictions were achieved in internal cross validation, while models with less than 50 training TCRs have low confidence.
+[Here](XXXX) the paper describing TCRpred predictive performance and applications.
 
-## Installation
+
+## Run TCR predictions in your browser
+
+By accessing [this link](https://colab.research.google.com/github/GiancarloCroce/test/blob/main/colab_TCRpred.ipynb), 
+TCRpred can be directly used in your web browser through Google Colab, providing an intuitive and interactive method 
+to test your own TCR list against any of the 146 pMHC TCRpred models. 
+For more extensive analysis or if you wish to use TCRpred offline, follow the installation instructions.
+
+## Install TCRpred on your local machine
+
+Alternatively, you can download TCRpred and run it in your machine. The code was tested with python 3.9
 
 1. Clone the GitHub repository and move to the TCRpred directory
 ```bash
@@ -14,15 +26,16 @@ cd TCRpred
 ```bash
 python3 -m venv TCRpred_venv  
 source TCRpred_venv/bin/activate  # to activate the virtual environment
-(TCRpred_venv) pip3 install -r requirements.txt  # to install the packages
+(TCRpred_venv) pip install -r requirements.txt  # to install the packages
 ```
 
 3. To test your installation, run the following command:
 ```bash
-(TCRpred_venv) python3 TCRpred.py --help
+(TCRpred_venv) python TCRpred.py --help
 ```
 
 which will show all the available TCRpred models.
+![](help_output.png)  
 
 ## Usage
 
@@ -53,14 +66,17 @@ The name of the output file. It contains two more column than the input: the TCR
 (Optional) --bath_size [batch_size]
 The default batch size is 1. If you have a large dataset of TCRs to test, increasing the batch_size can speed TCRpred up.
 
+## Download TCRpred pretrained models
 
 In the GitHub repository we include only two TCRpred models (A0201_GILGFVFT and A0201_ELAGIGILTV). 
+You can download the pretrained TCRpred models from our [Zenodo dataset](https://doi.org/10.5281/zenodo.7930623)
 
-To download all the 146 pretrained TCRpred models from (Zenodo) run:
+To download all the 146 pretrained TCRpred models run:
 ```bash
-bash code to download from zenodo
+(TCRpred_venv) python3 TCRpred.py --download
 ```
-or download TCR_pretrained_models.zip from (zenodo link), unzip it and replace the pretrained_model folders
 
-The code was tested with python 3.9
-
+To download the high-confidence 43 models (more than 50 training TCRs) run:
+```bash
+(TCRpred_venv) python3 TCRpred.py --download_high
+```
