@@ -7,7 +7,7 @@ For 43 pMHC robust predictions were achieved in internal cross validation, while
 
 ## Run TCR predictions in your browser
 
-By accessing [this link](https://colab.research.google.com/github/GiancarloCroce/test/blob/main/colab_TCRpred.ipynb), 
+By accessing [this link](https://colab.research.google.com/github/GfellerLab/TCRpred/blob/main/colab_TCRpred.ipynb), 
 TCRpred can be directly used in your web browser through Google Colab, providing an intuitive and interactive method 
 to test your own TCR list against any of the 146 pMHC TCRpred models. 
 For more extensive analysis or if you wish to use TCRpred offline, follow the installation instructions.
