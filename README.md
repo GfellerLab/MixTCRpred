@@ -1,7 +1,7 @@
 # TCRpred
 TCRpred is a sequence-based TCR-pMHC interaction predictor. 
 TCR binding predictions are currently possible for 146 pMHCs. 
-For 43 pMHCs robust predictions were achieved in internal cross validation, while models with less than 50 training TCRs have low confidence.
+For 43 pMHC robust predictions were achieved in internal cross validation, while models with less than 50 training TCRs have low confidence.
 [Here](XXXX) the paper describing TCRpred predictive performance and applications.
 
 
