@@ -41,7 +41,7 @@ class TransformerPredictor_AB_cdr123(pl.LightningModule):
         # Transformer - Encoder
         self.transformer_encoder = TransformerEncoder(num_layers=num_layers, input_dim=embedding_dim, dim_feedforward=hidden_dim, num_heads=num_heads, dropout=dropout)
         ### Output classifier
-        self.out_dim = np.sum(self.padding[0:3])*embedding_dim + 4*self.padding[-1]*embedding_dim
+        #self.out_dim = np.sum(self.padding[0:3])*embedding_dim + 4*self.padding[-1]*embedding_dim
         #without epitope
         self.out_dim = np.sum(self.padding[1:3])*embedding_dim + 4*self.padding[-1]*embedding_dim
         self.output_net= nn.Sequential( nn.Linear(self.out_dim,  embedding_dim), nn.BatchNorm1d(embedding_dim), nn.ReLU(inplace=True), nn.Linear(embedding_dim, num_labels))

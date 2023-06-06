@@ -18,7 +18,6 @@ import src.models
 import src.dataloaders
 import wget
 
-
 #to supprime all warning message and pytorchlighting info
 import warnings
 import logging
@@ -31,14 +30,13 @@ path_pretrained_models = './pretrained_models'
 
 if __name__ == '__main__':
 
-
     parser = ArgumentParser(add_help = False)
     ###
-    parser.add_argument('--help', action='store_true') #print help
+    parser.add_argument('-h', '--help', action='store_true') #print help
     #model params
-    parser.add_argument('--input', default=None)
-    parser.add_argument('--output', default=None)
-    parser.add_argument('--model', default= None)
+    parser.add_argument('-i', '--input', default=None)
+    parser.add_argument('-o', '--output', default=None)
+    parser.add_argument('-m', '--model', default= None)
     ### for large test set, increase the batch size
     parser.add_argument('--batch_size', type = int, default= 1)
     ### to download the model from Zenodo
@@ -47,15 +45,27 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     if args.help:
-        print("####################################################################################################")
-        print("# TCRpred: a sequence-based predictor of TCR-pMHC interaction")
-        print("####################################################################################################")
-        print("Usage: python TCRpred.py --model [TCRpred_model_name] --input [input_file_of_TCRs] --output [output_file]")
-        print("e.g.: python TCRpred.py --model A0201_ELAGIGILTV --input ./test/test.csv --output ./test/output.csv")
-        print("")
-        print("146 pre-trained TCRpred models are available. Models with less than 50 training TCRs have low confidence")
+        import pydoc
         df  = pd.read_csv(os.path.join(path_pretrained_models, 'info_models.csv'))
-        print(tabulate(df.drop(columns = 'AUC_5fold'), headers='keys', tablefmt='psql'))
+        #print(tabulate(df.drop(columns = ['Peptide', 'AUC_5fold']), headers='keys', tablefmt='psql'))
+        s = "####################################################################################################" + '\n' \
+             + "# TCRpred: a sequence-based predictor of TCR-pMHC interaction" + '\n' \
+            "####################################################################################################" + '\n' \
+            "Usage: python TCRpred.py --model [TCRpred_model_name] --input [input_file_of_TCRs] --output [output_file]" + '\n' \
+            "e.g.: python TCRpred.py --model A0201_ELAGIGILTV --input ./test/test.csv --output ./test/output.csv" + '\n' \
+            "" + '\n' \
+            "146 pre-trained TCRpred models are available. Models with less than 50 training TCRs have low confidence." + '\n' \
+            "Use the arrow keys to scroll the list of TCRpred models and press \'q\' to exit" + '\n' \
+            + tabulate(df.drop(columns = ['Peptide', 'AUC_5fold']), headers='keys', tablefmt='psql')
+        pydoc.pager(s)
+        #print("####################################################################################################")
+        #print("# TCRpred: a sequence-based predictor of TCR-pMHC interaction")
+        #print("####################################################################################################")
+        #print("Usage: python TCRpred.py --model [TCRpred_model_name] --input [input_file_of_TCRs] --output [output_file]")
+        #print("e.g.: python TCRpred.py --model A0201_ELAGIGILTV --input ./test/test.csv --output ./test/output.csv")
+        #print("")
+        #print("146 pre-trained TCRpred models are available. Models with less than 50 training TCRs have low confidence")
+        #print(tabulate(df.drop(columns = ['Peptide', 'AUC_5fold']), headers='keys', tablefmt='psql'))
         sys.exit(0)
 
     #to download all the pretrained model
@@ -154,10 +164,10 @@ if __name__ == '__main__':
     if args.test != None:
 
         print("#########################################################################")
-        print("###### TCRpred: a sequence-based predictor of TCR-pMHC interactions  ####")
+        print("###### TCRpred: a sequence-based predictor of TCR-pMHC interaction  ####")
         print("#########################################################################")
         print("TCRpred model {0} ".format(args.model))
-        print("Computing binding predictions for {0}", format(args.test))
+        print("Computing binding predictions for {0}".format(args.test))
 
         #reload model from checkpoint
         model = model.load_from_checkpoint(
