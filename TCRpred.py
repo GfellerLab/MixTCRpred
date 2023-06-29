@@ -18,6 +18,7 @@ import src.models
 import src.dataloaders
 import wget
 
+
 #to supprime all warning message and pytorchlighting info
 import warnings
 import logging
@@ -27,12 +28,12 @@ warnings.filterwarnings('ignore')
 
 path_pretrained_models = './pretrained_models'
 
-
 if __name__ == '__main__':
 
     parser = ArgumentParser(add_help = False)
     ###
     parser.add_argument('-h', '--help', action='store_true') #print help
+    parser.add_argument('--list_model', action='store_true') #print list all models
     #model params
     parser.add_argument('-i', '--input', default=None)
     parser.add_argument('-o', '--output', default=None)
@@ -40,11 +41,31 @@ if __name__ == '__main__':
     ### for large test set, increase the batch size
     parser.add_argument('--batch_size', type = int, default= 1)
     ### to download the model from Zenodo
-    parser.add_argument('--download', action = 'store_true')
+    parser.add_argument('--download', default= None)
+    parser.add_argument('--download_all', action = 'store_true')
     parser.add_argument('--download_high', action = 'store_true')
     args = parser.parse_args()
 
     if args.help:
+        print("####################################################################################################")
+        print("# TCRpred v1.0: a sequence-based predictor of TCR-pMHC interaction")
+        print("####################################################################################################")
+        print("Usage: python TCRpred.py --model [TCRpred_model_name] --input [input_file_of_TCRs] --output [output_file]")
+        print("e.g.: python TCRpred.py --model A0201_GILGFVFTL --input ./test/test.csv --output ./test/output.csv")
+        print("----------------------------------------------------------------------------------------------------")
+        print("Arguments:")
+        print("\t[-m] or [--model]. The name of the TCRpred model. 146 pre-trained TCRpred models are currently available" )
+        print("\t[-i] or [--input]. The path to the input .csv file containing the TCR sequences")
+        print("\t[-o] or [--output]. The path to the output file where results will be saved")
+        print("Additional arguments:")
+        print("\t[--list_model]. To visualize the 146 TCRpred models for which we can run predictions. Models with less than 50 training TCRs have low confidence")
+        print("\t[--batch_size]. The default batch size is 1. If you have a large dataset of TCRs to test, increasing the batch_size can speed TCRpred up")
+        print("\t[--download model_name]. To download a specific pretrained TCRpred model (E.g. python TCRpred.py A0201_GILGFVFTL to download the corresponding pretrained TCRpred model")
+        print("\t[--download_all]. To download the 146 pretrained TCRpred models")
+        print("\t[--download_high]. To download the 43 high-confidence pretrained TCRpred models (with more than 50 training TCRs)")
+        print("\t[-h] or [--help]. To print this help message")
+        sys.exit(0)
+    if args.list_model:
         import pydoc
         df  = pd.read_csv(os.path.join(path_pretrained_models, 'info_models.csv'))
         #print(tabulate(df.drop(columns = ['Peptide', 'AUC_5fold']), headers='keys', tablefmt='psql'))
@@ -52,24 +73,16 @@ if __name__ == '__main__':
              + "# TCRpred: a sequence-based predictor of TCR-pMHC interaction" + '\n' \
             "####################################################################################################" + '\n' \
             "Usage: python TCRpred.py --model [TCRpred_model_name] --input [input_file_of_TCRs] --output [output_file]" + '\n' \
-            "e.g.: python TCRpred.py --model A0201_ELAGIGILTV --input ./test/test.csv --output ./test/output.csv" + '\n' \
+            "e.g.: python TCRpred.py --model A0201_GILGFVFTL --input ./test/test.csv --output ./test/output.csv" + '\n' \
             "" + '\n' \
             "146 pre-trained TCRpred models are available. Models with less than 50 training TCRs have low confidence." + '\n' \
             "Use the arrow keys to scroll the list of TCRpred models and press \'q\' to exit" + '\n' \
             + tabulate(df.drop(columns = ['Peptide', 'AUC_5fold']), headers='keys', tablefmt='psql')
         pydoc.pager(s)
-        #print("####################################################################################################")
-        #print("# TCRpred: a sequence-based predictor of TCR-pMHC interaction")
-        #print("####################################################################################################")
-        #print("Usage: python TCRpred.py --model [TCRpred_model_name] --input [input_file_of_TCRs] --output [output_file]")
-        #print("e.g.: python TCRpred.py --model A0201_ELAGIGILTV --input ./test/test.csv --output ./test/output.csv")
-        #print("")
-        #print("146 pre-trained TCRpred models are available. Models with less than 50 training TCRs have low confidence")
-        #print(tabulate(df.drop(columns = ['Peptide', 'AUC_5fold']), headers='keys', tablefmt='psql'))
         sys.exit(0)
 
     #to download all the pretrained model
-    if (args.download) | (args.download_high):
+    if (args.download_all) | (args.download_high):
         df  = pd.read_csv(os.path.join(path_pretrained_models, 'info_models.csv'))
         if (args.download_high):
             min_num_train = 50
@@ -82,6 +95,16 @@ if __name__ == '__main__':
                 url = "https://zenodo.org/record/7930623/files/model_"+model_name+".ckpt"
                 print("Downloading TCRpred model for {0}".format(model_name))
                 filename = wget.download(url, out = path_pretrained_models)
+        sys.exit(0)
+
+    if args.download != None:
+        print('Downloading TCrpred model for {0})'.format(args.download))
+        url = "https://zenodo.org/record/7930623/files/model_"+args.download+".ckpt"
+        if os.path.exists( os.path.join(path_pretrained_models, "model_{0}.ckpt".format(args.download))):
+            print("{0} TCRpred model already downloaded".format(args.download))
+        else:
+            filename = wget.download(url, out = path_pretrained_models)
+        sys.exit(0)
 
     #################################################
     ##########################################for a quick test
@@ -122,7 +145,6 @@ if __name__ == '__main__':
     auc_internal = df_epi_info['AUC_5fold'].values[0]
     host_species = df_epi_info['Host_species'].values[0]
     args.host = host_species
-
 
     #set config
     config = configparser.ConfigParser()
@@ -206,7 +228,7 @@ if __name__ == '__main__':
         f.write("# Input file: {0}\n".format(args.input))
         f.write("# \n")
         f.write("# TCRpred is freely available for academic users.\n")
-        f.write("# Private companies should contact XXX at the Ludwig Institute for Cancer Research Ltd for commercial licenses.\n")
+        f.write("# Private companies should contact Nadette Bulgin](nbulgin@lcr.org) at the Ludwig Institute for Cancer Research Ltd for commercial licenses.\n")
         f.write("#\n")
         f.write("# To cite TCRpred,  please refer to: XXXXX\n")
         f.write("#---------------------------------------------------------------------------\n")
@@ -214,7 +236,7 @@ if __name__ == '__main__':
         if good_model:
             f.write("# Number of training data {0}. Internal AUC {1:.2f}\n".format(n_seq, auc_internal))
         else:
-            f.write("# Number of training data {0} (<50!). Low-confidence TCRpred model!! \n".format(n_seq))
+            f.write("# Number of training data {0} (<50!). Low-confidence TCRpred model! \n".format(n_seq))
         f.write("#---------------------------------------------------------------------------\n")
         f.write("##############################################################################################\n")
         f.close()
