@@ -128,3 +128,7 @@ python MixTCRpred.py --download_high
 For scientific questions, please contact [Giancarlo Croce](mailto:giancarlo.croce@unil.ch?subject=[GitHub]%20MixTCRpred%20) or [David Gfeller](mailto:david.gfeller@unil.ch?subject=[GitHub]%20MixTCRpred%20)
 
 For license-related questions, please contact [Nadette Bulgin](mailto:nbulgin@lcr.org?subject=[GitHub]%20MixTCRpred%20).
+
+## Acknowledgments
+
+This project received funding from the European Union's Horizon 2020 research and innovation programme under the Marie Skłodowska-Curie grant agreement, No. 101027973, [MT-PoINT project](https://cordis.europa.eu/project/id/101027973)
