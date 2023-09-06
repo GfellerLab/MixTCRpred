@@ -1,4 +1,4 @@
-TCRpred_model_name,Peptide,Origin,MHC_class,MHC,Host_species,Number_training_abTCR,AUC_5fold
+MixTCRpred_model_name,Peptide,Origin,MHC_class,MHC,Host_species,Number_training_abTCR,AUC_5fold
 H2-IAb_DIYKGVYQFKSV,DIYKGVYQFKSV,Lymphocytic choriomeningitis mammarenavirus (LCMV),MHCII,H2-IAb,MusMusculus,3650,0.9538088401
 A0201_GILGFVFTL,GILGFVFTL,Influenza A virus ,MHCI,HLA-A*02:01,HomoSapiens,2079,0.9432831141
 H2-Kb_SSYRRPVGI,SSYRRPVGI,Influenza A virus ,MHCI,H2-Kb,MusMusculus,1158,0.9386768055

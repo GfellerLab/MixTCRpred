@@ -1,15 +1,15 @@
 ##############################################################################################
-# Output from TCRpred (v1.0)
+# Output from MixTCRpred (v1.0)
 # Predictions of TCRs binding to HLA-A*02:01,GILGFVFTL - class I pMHC  
 # Origin: Influenza A virus 
 # Input file: ./test/test.csv
 # 
-# TCRpred is freely available for academic users.
+# MixTCRpred is freely available for academic users.
 # Private companies should contact Nadette Bulgin](nbulgin@lcr.org) at the Ludwig Institute for Cancer Research Ltd for commercial licenses.
 #
-# To cite TCRpred,  please refer to: XXXXX
+# To cite MixTCRpred,  please refer to: XXXXX
 #---------------------------------------------------------------------------
-# Binding predictions with TCRpred model A0201_GILGFVFTL
+# Binding predictions with MixTCRpred model A0201_GILGFVFTL
 # Number of training data 2079. Internal AUC 0.94
 #---------------------------------------------------------------------------
 ##############################################################################################
