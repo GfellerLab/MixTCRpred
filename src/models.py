@@ -185,15 +185,10 @@ class TransformerPredictor_AB_cdr123_with_epi(pl.LightningModule):
         self.embedding_pos_cdr3_TRA = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, self.padding[1])
         self.embedding_pos_cdr3_TRB = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, self.padding[2])
         self.embedding_pos = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, np.sum(self.padding[0:3]))
-
         self.embedding_pos_cdr12= PositionWiseEmbedding(self.vocab_size, self.embedding_dim, 4*self.padding[-1])
-
-
-
         ########## TEST ############3
         self.embedding_pos_TRA = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, self.padding[1] + 2*self.padding[-1])
         self.embedding_pos_TRB = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, self.padding[1] + 2*self.padding[-1])
-
         # Transformer - Encoder
         self.transformer_encoder = TransformerEncoder(num_layers=num_layers,
                                               input_dim=embedding_dim,
@@ -202,16 +197,13 @@ class TransformerPredictor_AB_cdr123_with_epi(pl.LightningModule):
                                               dropout=dropout)
         ### Output classifier
         self.out_dim = np.sum(self.padding[0:3])*embedding_dim + 4*self.padding[-1]*embedding_dim
-
         self.output_net= nn.Sequential(
             nn.Linear(self.out_dim,  embedding_dim),
             nn.BatchNorm1d(embedding_dim),
             nn.ReLU(inplace=True),
             nn.Linear(embedding_dim, num_labels)
             )
-
     def forward(self, inp_data, mask=False):
-
         if mask:
             mask_epi = (inp_data[0] != self.padding_idx).unsqueeze(1).unsqueeze(2)
             mask_cdr3_TRA = (inp_data[1] != self.padding_idx).unsqueeze(1).unsqueeze(2)
@@ -228,9 +220,7 @@ class TransformerPredictor_AB_cdr123_with_epi(pl.LightningModule):
             mask_cdr2_TRA = None
             mask_cdr1_TRB = None
             mask_cdr2_TRB = None
-
         ##### Sequences
-
         ##EPITOPE
         #x_epi = inp_data[0]
         #x_emb_epi = self.embedding_tok(x_epi)
@@ -258,7 +248,6 @@ class TransformerPredictor_AB_cdr123_with_epi(pl.LightningModule):
         #x_cdr3_TRB_out = self.transformer_encoder(x_cdr3_TRB, mask=mask_cdr3_TRB)
         ##concat and flatten
         #x_cdr3 = torch.concat([x_epi_out, x_cdr3_TRA_out, x_cdr3_TRB_out], dim = 1)
-
         #### cdr12_TRA
         #x_cdr1_TRA = inp_data[3]
         #x_cdr2_TRA = inp_data[4]
@@ -280,13 +269,9 @@ class TransformerPredictor_AB_cdr123_with_epi(pl.LightningModule):
         ##flatten and classify
         #x = x.flatten(start_dim = 1)
         #x = self.output_net(x)
-
-
         ####################################################################################################
         # @!!!!!!! test
         ####################################################################################################
-
-
         ####################################################################################################
         ### TRA
         ####################################################################################################
@@ -315,8 +300,6 @@ class TransformerPredictor_AB_cdr123_with_epi(pl.LightningModule):
         scale_TRB = self.scale.to(x_emb_TRB.device)
         x_TRB = (x_emb_TRB * scale_TRB) + x_pos_TRB
         x_TRB_out = self.transformer_encoder(x_TRB, mask=mask_TRB)
-
-
         ####################################################################################################
         #EPITOPE
         ####################################################################################################
@@ -330,8 +313,6 @@ class TransformerPredictor_AB_cdr123_with_epi(pl.LightningModule):
         ##x_epi = x_epi.flatten(start_dim = 1)
         #### FIX THE EPITOPE
         #x_epi_out = torch.zeros((x_epi.shape[0], x_epi.shape[1], x_TRA_out.shape[-1]), device = x_TRA.device)
-
-
         #concat
         x = torch.concat([x_epi_out, x_TRA_out, x_TRB_out], dim = 1)
         #add one last transformer encoder
@@ -362,7 +343,6 @@ class TransformerPredictor_AB_cdr123_with_epi(pl.LightningModule):
         preds = self.forward(inp_data, mask = True)
         loss = self.loss_function(preds, labels)
         self.log('train_loss', loss)
-
         #compute auc
         fpr, tpr, threshold = metrics.roc_curve(labels.cpu().numpy(), preds.data[:,1].cpu().numpy())
         AUC = metrics.auc(fpr, tpr)

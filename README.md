@@ -1,8 +1,5 @@
 # MixTCRpred
-MixTCRpred is a sequence-based TCR-pMHC interaction predictor. 
-TCR binding predictions are currently possible for 146 pMHCs. 
-For 43 pMHC robust predictions were achieved in internal cross validation, while models with less than 50 training TCRs have low confidence.
-[Here](XXXX) the paper describing MixTCRpred predictive performance and applications.
+MixTCRpred accurately predicts T-cell receptors (TCRs) recognizing several viral and cancer epitopes (peptides displayed on MHC molecules or pMHCs) using sequence data. Currently, binding predictions are available for 146 pMHCs. Accurate predictions were achieved for 43 pMHCs that have more than 50 training TCRs. [Here](https://www.biorxiv.org/content/10.1101/2023.09.13.557561v1) the paper describing MixTCRpred predictive performance and applications.
 
 
 ## Run MixTCRpred with GoogleColab
@@ -42,7 +39,7 @@ or
 python MixTCRpred.py --list_models
 ```
 
-which will show all currently available MixTCRpred models.
+which list all available MixTCRpred models.
 ![](list_model_output.png)
 
 4. Finally run 
@@ -73,7 +70,7 @@ alias MixTCRpred='/home/[...]/MixTCRpred/MixTCRpred_venv/bin/python /home/[...]/
 
 ```bash
 source MixTCRpred_venv/bin/activate  # to activate the virtual environment (MixTCRpred_venv)
-python MixTCRpred.py --model [MixTCRpred_model_name] --input [input_TCR_file] --out [output_file]
+python MixTCRpred.py --model [MixTCRpred_model_name] --input [input_TCR_file] --output [output_file]
 ```
 
 Three arguments are required:
@@ -92,9 +89,9 @@ The name of the output file. It contains two extra columns than the input file: 
 
 Additional and optional arguments are:  
 
-```--list_models```. To visualize the 146 MixTCRpred models for which we can run predictions. Models with less than 50 training TCRs have low confidence  
+```--list_models```. To list the 146 MixTCRpred models for which we can currently run predictions. Models with less than 50 training TCRs have low confidence  
 
-```--batch_size```. The default batch size is 1. If you have a large dataset of TCRs to test, increasing the batch_size can speed MixTCRpred up  
+```--batch_size```. The default batch size for testing is 1. If you have a large dataset of TCRs to test, increasing the batch_size can speed MixTCRpred up  
 
 ```--download model_name```. To download a specific pretrained MixTCRpred model  
 

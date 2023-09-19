@@ -57,7 +57,7 @@ if __name__ == '__main__':
         print("\t[-m] or [--model]. The name of the MixTCRpred model. 146 pre-trained MixTCRpred models are currently available" )
         print("\t[-i] or [--input]. The path to the input .csv file containing the TCR sequences")
         print("\t[-o] or [--output]. The path to the output file where results will be saved")
-        print("Additional arguments:")
+        print("Additional/optional arguments:")
         print("\t[--list_models]. To visualize the 146 MixTCRpred models for which we can run predictions. Models with less than 50 training TCRs have low confidence")
         print("\t[--batch_size]. The default batch size is 1. If you have a large dataset of TCRs to test, increasing the batch_size can speed MixTCRpred up")
         print("\t[--download]. To download a specific pretrained MixTCRpred model (E.g. python MixTCRpred.py A0201_GILGFVFTL to download the corresponding pretrained MixTCRpred model)")
