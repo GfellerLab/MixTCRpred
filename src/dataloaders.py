@@ -146,7 +146,7 @@ class transformer_DataModule(pl.LightningDataModule):
         if self.train_path != None:
             df = pd.read_csv(self.train_path)
             database = db_transformer(df, padding = self.padding, epitope = self.epitope, host = self.host)
-            train_len = int(0.95*database.len) #tried 0.9, 0.99
+            train_len = int(0.95*database.len)
             valid_len = database.len - train_len
             #print("****", train_len, valid_len)
             self.train, self.valid = random_split(database, lengths=[train_len, valid_len ])

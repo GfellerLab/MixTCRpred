@@ -1,29 +1,14 @@
-import pandas as pd
-import numpy as np
 import os
-import scipy
-from sklearn import metrics
-from tqdm import tqdm
 from argparse import ArgumentParser
 from tabulate import tabulate
+import wget
+import pickle
 import sys
 import pathlib
 import configparser
-import torch
-import pickle
-import pytorch_lightning as pl
-from torch.utils.data import DataLoader, random_split
-import src.utils
-import src.models
-import src.dataloaders
-import wget
+import pandas as pd
 
 
-#to supprime all warning message and pytorchlighting info
-import warnings
-import logging
-logging.getLogger("pytorch_lightning").setLevel(logging.WARNING)
-warnings.filterwarnings('ignore')
 
 
 path_pretrained_models = './pretrained_models'
@@ -106,13 +91,25 @@ if __name__ == '__main__':
             filename = wget.download(url, out = path_pretrained_models)
         sys.exit(0)
 
-    #################################################
+    print("#########################################################################")
+    print("###### MixTCRpred: a sequence-based predictor of TCR-pMHC interaction  ####")
+    print("#########################################################################")
+    import torch
+    import pytorch_lightning as pl
+    from torch.utils.data import DataLoader, random_split
+    import src.utils
+    import src.models
+    import src.dataloaders
+    import numpy as np
+    import scipy
+    from sklearn import metrics
+    from tqdm import tqdm
+
     ##########################################for a quick test
     #args.model = 'A0201_GILGFVFTL'
     #args.input= './test/test.csv'
     #args.output = './test/out_test.csv'
     #########################################################
-
 
     ##to make input compatible with MixTCRpred format
     args.train = None
@@ -130,7 +127,7 @@ if __name__ == '__main__':
         print("*** Error! Test file not found. Is --test {0} a valid test file? ***".format(args.test))
         sys.exit(0)
     if (args.path_checkpoint == None) or (os.path.exists(args.path_checkpoint) == False):
-        print("*** Error! Model not loaded. Is {0} a valid MixTCRpred model name? For help, run ./MixTCRpred.py --help ***".format(args.model))
+        print("*** Error! Model not loaded. Is {0} a valid MixTCRpred model name? For help, run ./MixTCRpred.py --help ***".format(args.path_checkpoint))
         sys.exit(0)
 
     #### determine info epitope
@@ -150,7 +147,6 @@ if __name__ == '__main__':
     config = configparser.ConfigParser()
     config['transformer'] = {'padding_epitope':len(args.epitope), 'padding_cdr3_TRA':20, 'padding_cdr3_TRB':20, 'padding_cdr12':10, 'embedding_dim':128, 'hidden_dim':1024, 'num_heads':4, 'num_layers':4, 'dropout':0.2, 'lr':1e-4, 'warmup':1000, 'max_iters': 500, 'num_labels':2}
     args.padding = [config['transformer'].getint('padding_epitope'), config['transformer'].getint('padding_cdr3_TRA'), config['transformer'].getint('padding_cdr3_TRB'), config['transformer'].getint('padding_cdr12')]
-
 
     #0.load model
     data = src.dataloaders.transformer_DataModule(hparams = args)
@@ -180,21 +176,18 @@ if __name__ == '__main__':
             monitor='val_loss'
             )
 
-    trainer = pl.Trainer.from_argparse_args(args, default_root_dir = path_model_folder, max_epochs = int(args.epochs), callbacks = [mc], logger = False) #use logger false to disable tensorboard
+    trainer = pl.Trainer(accelerator="cpu", default_root_dir = path_model_folder, max_epochs = int(args.epochs), callbacks = [mc], logger = False) #use logger false to disable tensorboard
 
     #2. Predictions
     if args.test != None:
 
-        print("#########################################################################")
-        print("###### MixTCRpred: a sequence-based predictor of TCR-pMHC interaction  ####")
-        print("#########################################################################")
         print("MixTCRpred model: {0} ".format(args.model))
         print("Computing predictions for {0}".format(args.test))
 
         #reload model from checkpoint
         model = model.load_from_checkpoint(
             checkpoint_path= args.path_checkpoint,
-            map_location=None,
+            map_location=torch.device('cpu')
             )
         trainer.test(model, datamodule = data)
         test_score = model.prob
@@ -211,6 +204,7 @@ if __name__ == '__main__':
             pr = src.utils.get_perc_rank(score, args.epitope, d_par)
             l_perc_rank.append(pr)
         df_res['perc_rank'] = l_perc_rank
+        df_res['perc_rank'] += 0.0001
         df_res = df_res.drop('epitope', axis = 1)
 
         #sort the results
@@ -230,11 +224,11 @@ if __name__ == '__main__':
         f.write("# MixTCRpred is freely available for academic users.\n")
         f.write("# Private companies should contact Nadette Bulgin](nbulgin@lcr.org) at the Ludwig Institute for Cancer Research Ltd for commercial licenses.\n")
         f.write("#\n")
-        f.write("# To cite MixTCRpred,  please refer to: XXXXX\n")
+        f.write("# To cite MixTCRpred,  please refer to https://www.biorxiv.org/content/10.1101/2023.09.13.557561v1\n")
         f.write("#---------------------------------------------------------------------------\n")
         f.write("# Binding predictions with MixTCRpred model {0}\n".format(model_name))
         if good_model:
-            f.write("# Number of training data {0}. Internal AUC {1:.2f}\n".format(n_seq, auc_internal))
+            f.write("# Number of training data {0}. AUC of 5-fold-cross validation = {1:.2f}\n".format(n_seq, auc_internal))
         else:
             f.write("# Number of training data {0} (<50!). Low-confidence MixTCRpred model! \n".format(n_seq))
         f.write("#---------------------------------------------------------------------------\n")

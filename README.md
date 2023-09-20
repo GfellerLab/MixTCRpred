@@ -9,25 +9,29 @@ For more extensive analysis or if you prefer to use MixTCRpred offline, it is re
 
 ## Install MixTCRpred 
 
+The code was tested with Python 3.9, 3.10 and 3.11
+
 1. Clone the GitHub repository and move to the MixTCRpred directory
 ```bash
 git clone https://github.com/GfellerLab/MixTCRpred 
 cd MixTCRpred
 ```
 
-2. (Recommended) Create a virtual environment and install the required packages
+2. (Recommended) Create a virtual environment 
 ```bash
 # For Unix/Mac OS users
 python -m venv MixTCRpred_venv  
 source MixTCRpred_venv/bin/activate  # to activate the virtual environment (MixTCRpred_venv)
-pip install --upgrade pip
-pip install -r requirements.txt  # to install the packages
-
 # Windows users please refer to https://docs.python.org/3/library/venv.html to create and activate a virtual environment. 
-
 ```
 
-3. To test your installation, run the following command:
+3. Install the required packages 
+```bash
+pip install --upgrade pip
+pip install -r requirements.txt 
+```
+
+4. To test your installation, run the following command:
 ```bash
 python MixTCRpred.py --help
 ```
@@ -39,10 +43,10 @@ or
 python MixTCRpred.py --list_models
 ```
 
-which list all available MixTCRpred models.
+which will list all available MixTCRpred models.
 ![](list_model_output.png)
 
-4. Finally run 
+5. Finally run 
 
 ```bash
 python MixTCRpred.py --model A0201_GILGFVFTL --input ./test/test.csv --output ./test/output.csv 
@@ -50,15 +54,14 @@ python MixTCRpred.py --model A0201_GILGFVFTL --input ./test/test.csv --output ./
 
 to predict which TCRs in the ./test/test.csv file are more likely to target the HLA-A\*02:01,GILGFVFTL epitope.
 
-
-
-5. (Optional) To run MixTCRpred from anywhere on the computer, open MixTCRpred.py with your favourite editor and specify the full path to the pretrained models folder:
+6. (Optional) To run MixTCRpred from anywhere on the computer, open the MixTCRpred.py file with your favourite editor and specify the full path to the pretrained models folder:
 ```bash
 #change
 path_pretrained_models = './pretrained_models'
 #to 
 path_pretrained_models = '/home/[...]/MixTCRpred/pretrained_models'
 ```
+
 Next make an alias to the MixTCRpred.py file using the python version of the virtual enviroment:
 ```bash
 # For Unix/Mac OS users
@@ -69,7 +72,6 @@ alias MixTCRpred='/home/[...]/MixTCRpred/MixTCRpred_venv/bin/python /home/[...]/
 ## Usage
 
 ```bash
-source MixTCRpred_venv/bin/activate  # to activate the virtual environment (MixTCRpred_venv)
 python MixTCRpred.py --model [MixTCRpred_model_name] --input [input_TCR_file] --output [output_file]
 ```
 
