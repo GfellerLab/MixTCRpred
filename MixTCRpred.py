@@ -183,7 +183,7 @@ if __name__ == '__main__':
         print("MixTCRpred model: {0} ".format(args.model))
         print("Computing predictions for {0}".format(args.test))
         #reload model from checkpoint
-        model = model.load_from_checkpoint(
+        model = src.models.TransformerPredictor_AB_cdr123.load_from_checkpoint(
             checkpoint_path= args.path_checkpoint,
             map_location=torch.device('cpu')
             )
