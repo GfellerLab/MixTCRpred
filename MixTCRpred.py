@@ -8,9 +8,6 @@ import pathlib
 import configparser
 import pandas as pd
 
-
-
-
 path_pretrained_models = './pretrained_models'
 
 if __name__ == '__main__':
@@ -94,6 +91,7 @@ if __name__ == '__main__':
     print("#########################################################################")
     print("###### MixTCRpred: a sequence-based predictor of TCR-pMHC interaction  ####")
     print("#########################################################################")
+    print("Path to pretrained models: {0}".format(path_pretrained_models))
     import torch
     import pytorch_lightning as pl
     from torch.utils.data import DataLoader, random_split
@@ -104,6 +102,7 @@ if __name__ == '__main__':
     import scipy
     from sklearn import metrics
     from tqdm import tqdm
+    import scipy.stats as stats
 
     ##########################################for a quick test
     #args.model = 'A0201_GILGFVFTL'
@@ -117,7 +116,7 @@ if __name__ == '__main__':
     args.out = args.output
     args.epitope = args.model.split("_")[-1]
     args.path_checkpoint = os.path.join(path_pretrained_models, 'model_'+args.model+'.ckpt')
-    args.epochs = 10
+    args.epochs = 0
     args.num_workers = 1
     args.gpus = None
     args.chain = 'AB'
@@ -127,7 +126,7 @@ if __name__ == '__main__':
         print("*** Error! Test file not found. Is --test {0} a valid test file? ***".format(args.test))
         sys.exit(0)
     if (args.path_checkpoint == None) or (os.path.exists(args.path_checkpoint) == False):
-        print("*** Error! Model not loaded. Is {0} a valid MixTCRpred model name? For help, run ./MixTCRpred.py --help ***".format(args.path_checkpoint))
+        print("*** Error! Model not loaded. Is {0} in folder {1} a valid MixTCRpred model name? For help, run ./MixTCRpred.py --help ***".format(args.path_checkpoint, path_pretrained_models))
         sys.exit(0)
 
     #### determine info epitope
@@ -183,7 +182,6 @@ if __name__ == '__main__':
 
         print("MixTCRpred model: {0} ".format(args.model))
         print("Computing predictions for {0}".format(args.test))
-
         #reload model from checkpoint
         model = model.load_from_checkpoint(
             checkpoint_path= args.path_checkpoint,
@@ -197,14 +195,13 @@ if __name__ == '__main__':
         df_res = data.test.data
         df_res['score'] = test_score
 
-        #compute perc_rank for a specific epitope
-        l_perc_rank = []
-        d_par = src.utils.d_par
-        for score in df_res['score'].values:
-            pr = src.utils.get_perc_rank(score, args.epitope, d_par)
-            l_perc_rank.append(pr)
-        df_res['perc_rank'] = l_perc_rank
-        df_res['perc_rank'] += 0.0001
+        #compute perc_rank
+        with open(os.path.join(path_pretrained_models, 'anchors_perc_rank.pickle'), 'rb') as fp:
+            d_model_anc = pickle.load(fp)
+        predicted_scores = df_res['score'].values
+        all_perc_rank = src.utils.compute_perc_rank(model_name, d_model_anc, predicted_scores)
+        df_res['perc_rank'] = all_perc_rank
+
         df_res = df_res.drop('epitope', axis = 1)
 
         #sort the results
@@ -230,7 +227,7 @@ if __name__ == '__main__':
         if good_model:
             f.write("# Number of training data {0}. AUC of 5-fold-cross validation = {1:.2f}\n".format(n_seq, auc_internal))
         else:
-            f.write("# Number of training data {0} (<50!). Low-confidence MixTCRpred model! \n".format(n_seq))
+            f.write("# Number of training data {0} (<50 !). Low-confidence MixTCRpred model! \n".format(n_seq))
         f.write("#---------------------------------------------------------------------------\n")
         f.write("##############################################################################################\n")
         f.close()
@@ -238,6 +235,35 @@ if __name__ == '__main__':
         print("The results are stored in {0}".format(args.out))
 
         #round
-        df_res = df_res.round(5)
-
+        df_res = df_res.round(3)
         df_res.to_csv(args.out, index = False, mode = 'a')
+
+
+        ##make log file (check if map V -> CDR 1,2 failed etc.)
+        #check for V,J genes
+        df_log = data.test.data
+
+        df_log = df_log.round(5)
+        df_log['TRAV_corrected'] = [i.split("_")[1].replace('X', '') for i in test_seq]
+        df_log['cdr1_TRA'] = [i.split("_")[2].replace('X', '') for i in test_seq]
+        df_log['cdr2_TRA'] = [i.split("_")[3].replace('X', '') for i in test_seq]
+        df_log['cdr1_TRA'].replace('', np.nan, inplace = True)
+        df_log['cdr2_TRA'].replace('', np.nan, inplace = True)
+        df_log['TRBV_corrected'] = [i.split("_")[4].replace('X', '') for i in test_seq]
+        df_log['cdr1_TRB'] = [i.split("_")[5].replace('X', '') for i in test_seq]
+        df_log['cdr2_TRB'] = [i.split("_")[6].replace('X', '') for i in test_seq]
+        df_log['cdr1_TRB'].replace('', np.nan, inplace = True)
+        df_log['cdr2_TRB'].replace('', np.nan, inplace = True)
+        df_log = df_log.drop('epitope', axis = 1)
+
+        #check missing entries
+        df_log['Warning'] = '-'
+        idx_missing_cdr1a = set(df_log.index) - set(df_log.dropna(subset = 'cdr1_TRA').index)
+        idx_missing_cdr2a = set(df_log.index) - set(df_log.dropna(subset = 'cdr2_TRA').index)
+        idx_missing_cdr1b = set(df_log.index) - set(df_log.dropna(subset = 'cdr1_TRB').index)
+        idx_missing_cdr2b = set(df_log.index) - set(df_log.dropna(subset = 'cdr2_TRB').index)
+        df_log.loc[list(idx_missing_cdr1a.union(idx_missing_cdr2a)), 'Warning'] = 'Error TRAV'
+        df_log.loc[list(idx_missing_cdr1b.union(idx_missing_cdr2b)), 'Warning'] = 'Error TRBV'
+        df_log.loc[list( (idx_missing_cdr1a.union(idx_missing_cdr2a)).intersection(idx_missing_cdr1b.union(idx_missing_cdr2b))), 'Warning'] = 'Error TRAV-TRBV'
+        df_log.loc[list( (idx_missing_cdr1b.union(idx_missing_cdr2b)).intersection(idx_missing_cdr1a.union(idx_missing_cdr2a))), 'Warning'] = 'Error TRAV-TRBV'
+        df_log.to_csv('{0}_logfile'.format(args.out), index = False)

@@ -12,6 +12,8 @@ import math
 import torchvision.transforms as transforms
 import os
 from src.utils import valid_aa, d_aa_int, q_aa, check_only_standard_aa, clean_aaseq, d_trav_cdr1_homo_sapiens, d_trav_cdr2_homo_sapiens, d_trbv_cdr1_homo_sapiens, d_trbv_cdr2_homo_sapiens, d_trav_cdr1_mus_musculus, d_trav_cdr2_mus_musculus, d_trbv_cdr1_mus_musculus, d_trbv_cdr2_mus_musculus
+from src.utils import correct_gene_name, map_correct_homo_sapiens_TRAV, map_correct_homo_sapiens_TRAJ, map_correct_homo_sapiens_TRBV, map_correct_homo_sapiens_TRBJ, map_correct_mus_musculus_TRAV, map_correct_mus_musculus_TRAJ, map_correct_mus_musculus_TRBV, map_correct_mus_musculus_TRBJ
+
 import itertools
 
 class db_transformer(Dataset):
@@ -26,11 +28,12 @@ class db_transformer(Dataset):
             if col not in self.data.columns:
                 continue
             self.data = self.data.dropna(subset = col, how = 'any')
-        #if istrain: #only for train -> rm duplicated seq
+        #if istrain: #only for train -> rm duplicated seq (do it in data preprocessing)
         #   self.data = self.data.drop_duplicates(subset = self.data_col)
         for idx, col in enumerate(self.data_col):
             if col not in self.data.columns:
                 continue
+            #seq too long
             self.data = self.data[self.data[col].map(len) <= padding[idx]]
         #check only standard aa
         for idx, col in enumerate(self.data_col):
@@ -54,24 +57,38 @@ class db_transformer(Dataset):
                 self.tp = [0]*self.len
         self.padding = padding
 
-        ### add vj info
-        self.TRAV = self.data['TRAV'].values
-        self.TRAJ = self.data['TRAJ'].values
-        self.TRBV = self.data['TRBV'].values
-        self.TRBJ = self.data['TRBJ'].values
 
         #mapping V,J gene to cdr12
         self.host = host
+
         if host == 'HomoSapiens':
             self.map_va_cdr1 = d_trav_cdr1_homo_sapiens
             self.map_va_cdr2 = d_trav_cdr2_homo_sapiens
             self.map_vb_cdr1 = d_trbv_cdr1_homo_sapiens
             self.map_vb_cdr2 = d_trbv_cdr2_homo_sapiens
+            ### for correcting V,J name
+            map_correct_TRAV = map_correct_homo_sapiens_TRAV
+            map_correct_TRAJ = map_correct_homo_sapiens_TRAJ
+            map_correct_TRBV = map_correct_homo_sapiens_TRBV
+            map_correct_TRBJ = map_correct_homo_sapiens_TRBJ
         if host == 'MusMusculus':
             self.map_va_cdr1 = d_trav_cdr1_mus_musculus
             self.map_va_cdr2 = d_trav_cdr2_mus_musculus
             self.map_vb_cdr1 = d_trbv_cdr1_mus_musculus
             self.map_vb_cdr2 = d_trbv_cdr2_mus_musculus
+            ### for correcting V,J name
+            map_correct_TRAV = map_correct_mus_musculus_TRAV
+            map_correct_TRAJ = map_correct_mus_musculus_TRAJ
+            map_correct_TRBV = map_correct_mus_musculus_TRBV
+            map_correct_TRBJ = map_correct_mus_musculus_TRBJ
+
+        ### add vj info (and correct name if possible)
+        self.TRAV = [correct_gene_name(map_correct_TRAV,i) for i in self.data['TRAV'].values]
+        self.TRAJ = [correct_gene_name(map_correct_TRAJ,i) for i in self.data['TRAJ'].values]
+        self.TRBV = [correct_gene_name(map_correct_TRBV,i) for i in self.data['TRBV'].values]
+        self.TRBJ = [correct_gene_name(map_correct_TRBJ,i) for i in self.data['TRBJ'].values]
+
+
     def __getitem__(self, index):
         seq_epi_tcr = ""
         seq_epi_tcr_tens = []
