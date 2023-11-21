@@ -54,7 +54,7 @@ python MixTCRpred.py --model A0201_GILGFVFTL --input ./test/test.csv --output ./
 
 to predict which TCRs in the ./test/test.csv file are more likely to target the HLA-A\*02:01,GILGFVFTL epitope.
 
-Before running the predictor, MixTCRpred also performs a quality control of the input data, attempting to correct incorrenct V,J genes and extrapolating the CDR1 and CDR2 sequences. You can find the fixes and other information in the [output_file]_logfile file.
+Before running the predictor, MixTCRpred also performs a quality control of the input data, attempting to correct incorrect V,J genes and extrapolating the CDR1 and CDR2 sequences. You can find the fixes and other information in the [output_file]_logfile file.
 
 6. (Optional) To run MixTCRpred from anywhere on the computer, open the MixTCRpred.py file with your favourite editor and specify the full path to the pretrained models folder:
 ```bash

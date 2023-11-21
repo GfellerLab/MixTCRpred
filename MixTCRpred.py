@@ -266,4 +266,7 @@ if __name__ == '__main__':
         df_log.loc[list(idx_missing_cdr1b.union(idx_missing_cdr2b)), 'Warning'] = 'Error TRBV'
         df_log.loc[list( (idx_missing_cdr1a.union(idx_missing_cdr2a)).intersection(idx_missing_cdr1b.union(idx_missing_cdr2b))), 'Warning'] = 'Error TRAV-TRBV'
         df_log.loc[list( (idx_missing_cdr1b.union(idx_missing_cdr2b)).intersection(idx_missing_cdr1a.union(idx_missing_cdr2a))), 'Warning'] = 'Error TRAV-TRBV'
-        df_log.to_csv('{0}_logfile'.format(args.out), index = False)
+        #save only warning != '-'
+        df_log = df_log.loc[df_log['Warning'] != '-']
+        if len(df_log) > 0:
+            df_log.to_csv('{0}_logfile'.format(args.out), index = False)
