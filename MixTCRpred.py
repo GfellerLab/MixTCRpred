@@ -202,7 +202,7 @@ if __name__ == '__main__':
         if model_name in list(d_model_anc.keys()):
             all_perc_rank = src.utils.compute_perc_rank(model_name, d_model_anc, predicted_scores)
             df_res['perc_rank'] = all_perc_rank
-        else
+        else:
             df_res['perc_rank'] = np.nan
 
         df_res = df_res.drop('epitope', axis = 1)
