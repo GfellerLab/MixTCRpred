@@ -199,8 +199,11 @@ if __name__ == '__main__':
         with open(os.path.join(path_pretrained_models, 'anchors_perc_rank.pickle'), 'rb') as fp:
             d_model_anc = pickle.load(fp)
         predicted_scores = df_res['score'].values
-        all_perc_rank = src.utils.compute_perc_rank(model_name, d_model_anc, predicted_scores)
-        df_res['perc_rank'] = all_perc_rank
+        if model_name in list(d_model_anc.keys()):
+            all_perc_rank = src.utils.compute_perc_rank(model_name, d_model_anc, predicted_scores)
+            df_res['perc_rank'] = all_perc_rank
+        else
+            df_res['perc_rank'] = np.nan
 
         df_res = df_res.drop('epitope', axis = 1)
 
