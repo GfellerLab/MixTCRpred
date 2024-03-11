@@ -37,7 +37,7 @@ class TransformerPredictor_AB_cdr123(pl.LightningModule):
         self.scale = torch.sqrt(torch.FloatTensor([self.embedding_dim]))
         self.embedding_pos_epi = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, self.padding[0])
         self.embedding_pos_TRA = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, self.padding[1] + 2*self.padding[-1])
-        self.embedding_pos_TRB = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, self.padding[1] + 2*self.padding[-1])
+        self.embedding_pos_TRB = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, self.padding[2] + 2*self.padding[-1])
         # Transformer - Encoder
         self.transformer_encoder = TransformerEncoder(num_layers=num_layers, input_dim=embedding_dim, dim_feedforward=hidden_dim, num_heads=num_heads, dropout=dropout)
         ### Output classifier
@@ -131,11 +131,11 @@ class TransformerPredictor_AB_cdr123(pl.LightningModule):
         preds = self.forward(inp_data, mask = True)
         loss = self.loss_function(preds, labels)
         self.log('train_loss', loss)
-        #compute auc
-        fpr, tpr, threshold = metrics.roc_curve(labels.cpu().numpy(), preds.data[:,1].cpu().numpy())
-        AUC = metrics.auc(fpr, tpr)
-        #print("AUC_train:{0}".format(AUC))
-        self.log('train_auc', AUC)
+        ##compute auc
+        #fpr, tpr, threshold = metrics.roc_curve(labels.cpu().numpy(), preds.data[:,1].cpu().numpy())
+        #AUC = metrics.auc(fpr, tpr)
+        ##print("AUC_train:{0}".format(AUC))
+        #self.log('train_auc', AUC)
         return loss
     def validation_step(self, batch, batch_idx):
         inp_data = batch[1]
@@ -143,11 +143,11 @@ class TransformerPredictor_AB_cdr123(pl.LightningModule):
         preds = self.forward(inp_data, mask = True)
         loss = self.loss_function(preds, labels)
         self.log('val_loss', loss)
-        #compute auc
-        fpr, tpr, threshold = metrics.roc_curve(labels.cpu().numpy(), preds.data[:,1].cpu().numpy())
-        AUC = metrics.auc(fpr, tpr)
-        #print("AUC_train:{0}".format(AUC))
-        self.log('val_auc', AUC)
+        ##compute auc
+        #fpr, tpr, threshold = metrics.roc_curve(labels.cpu().numpy(), preds.data[:,1].cpu().numpy())
+        #AUC = metrics.auc(fpr, tpr)
+        ##print("AUC_train:{0}".format(AUC))
+        #self.log('val_auc', AUC)
         return loss
     def test_step(self, batch, batch_idx):
         test_seq = batch[0]
@@ -156,6 +156,7 @@ class TransformerPredictor_AB_cdr123(pl.LightningModule):
         preds = self.forward(inp_data, mask = True)
         loss = self.loss_function(preds, labels)
         self.prob.extend(preds.data[:,1].cpu().numpy())
+        #self.prob.extend(preds.data.cpu().numpy())
         self.test_tp.extend(labels.cpu().numpy())
         self.test_seq.extend(test_seq)
 
@@ -188,7 +189,7 @@ class TransformerPredictor_AB_cdr123_with_epi(pl.LightningModule):
         self.embedding_pos_cdr12= PositionWiseEmbedding(self.vocab_size, self.embedding_dim, 4*self.padding[-1])
         ########## TEST ############3
         self.embedding_pos_TRA = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, self.padding[1] + 2*self.padding[-1])
-        self.embedding_pos_TRB = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, self.padding[1] + 2*self.padding[-1])
+        self.embedding_pos_TRB = PositionWiseEmbedding(self.vocab_size, self.embedding_dim, self.padding[2] + 2*self.padding[-1])
         # Transformer - Encoder
         self.transformer_encoder = TransformerEncoder(num_layers=num_layers,
                                               input_dim=embedding_dim,
@@ -344,10 +345,10 @@ class TransformerPredictor_AB_cdr123_with_epi(pl.LightningModule):
         loss = self.loss_function(preds, labels)
         self.log('train_loss', loss)
         #compute auc
-        fpr, tpr, threshold = metrics.roc_curve(labels.cpu().numpy(), preds.data[:,1].cpu().numpy())
-        AUC = metrics.auc(fpr, tpr)
-        #print("AUC_train:{0}".format(AUC))
-        self.log('train_auc', AUC)
+        #fpr, tpr, threshold = metrics.roc_curve(labels.cpu().numpy(), preds.data[:,1].cpu().numpy())
+        #AUC = metrics.auc(fpr, tpr)
+        ##print("AUC_train:{0}".format(AUC))
+        #self.log('train_auc', AUC)
         return loss
     def validation_step(self, batch, batch_idx):
         inp_data = batch[1]
@@ -355,11 +356,11 @@ class TransformerPredictor_AB_cdr123_with_epi(pl.LightningModule):
         preds = self.forward(inp_data, mask = True)
         loss = self.loss_function(preds, labels)
         self.log('val_loss', loss)
-        #compute auc
-        fpr, tpr, threshold = metrics.roc_curve(labels.cpu().numpy(), preds.data[:,1].cpu().numpy())
-        AUC = metrics.auc(fpr, tpr)
-        #print("AUC_train:{0}".format(AUC))
-        self.log('val_auc', AUC)
+        ##compute auc
+        #fpr, tpr, threshold = metrics.roc_curve(labels.cpu().numpy(), preds.data[:,1].cpu().numpy())
+        #AUC = metrics.auc(fpr, tpr)
+        ##print("AUC_train:{0}".format(AUC))
+        #self.log('val_auc', AUC)
         return loss
     def test_step(self, batch, batch_idx):
         test_seq = batch[0]

@@ -22,6 +22,7 @@ for seq_record in SeqIO.parse("./{0}_HomoSapiens.fasta".format(gene_name), "fast
     name = seq_record.id
     vgene = name.split("|")[1]
     seq = seq_record.seq
+    break
     cdr1 = str(seq[26:38]).replace("-","")
     cdr2 = str(seq[55:65]).replace("-","")
     all_cdr1.append(cdr1)
@@ -62,6 +63,7 @@ for seq_record in SeqIO.parse("./{0}_MusMusculus.fasta".format(gene_name), "fast
     name = seq_record.id
     vgene = name.split("|")[1]
     seq = seq_record.seq
+    print(len(seq))
     cdr1 = str(seq[26:38]).replace("-","")
     cdr2 = str(seq[55:65]).replace("-","")
     all_cdr1.append(cdr1)

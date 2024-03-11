@@ -8,7 +8,8 @@ import pathlib
 import configparser
 import pandas as pd
 
-path_pretrained_models = './pretrained_models'
+path_pretrained_models = '/home/giancarlo/Documents/lab_work/MixTCRpred/pretrained_models'
+#path_pretrained_models = './pretrained_models'
 
 if __name__ == '__main__':
 
