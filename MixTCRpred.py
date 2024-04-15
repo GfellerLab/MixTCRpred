@@ -8,8 +8,7 @@ import pathlib
 import configparser
 import pandas as pd
 
-path_pretrained_models = '/home/giancarlo/Documents/lab_work/MixTCRpred/pretrained_models'
-#path_pretrained_models = './pretrained_models'
+path_pretrained_models = './pretrained_models'
 
 if __name__ == '__main__':
 
@@ -176,7 +175,8 @@ if __name__ == '__main__':
             monitor='val_loss'
             )
 
-    trainer = pl.Trainer(accelerator="cpu", default_root_dir = path_model_folder, max_epochs = int(args.epochs), callbacks = [mc], logger = False) #use logger false to disable tensorboard
+    #trainer = pl.Trainer(accelerator="cpu", default_root_dir = path_model_folder, max_epochs = int(args.epochs), callbacks = [mc], logger = False) #use logger false to disable tensorboard
+    trainer = pl.Trainer(accelerator="gpu", default_root_dir = path_model_folder, max_epochs = int(args.epochs), callbacks = [mc], logger = False) #use logger false to disable tensorboard
 
     #2. Predictions
     if args.test != None:
@@ -225,7 +225,7 @@ if __name__ == '__main__':
         f.write("# MixTCRpred is freely available for academic users.\n")
         f.write("# Private companies should contact Nadette Bulgin](nbulgin@lcr.org) at the Ludwig Institute for Cancer Research Ltd for commercial licenses.\n")
         f.write("#\n")
-        f.write("# To cite MixTCRpred,  please refer to https://www.biorxiv.org/content/10.1101/2023.09.13.557561v1\n")
+        f.write("# To cite MixTCRpred,  please refer to https://www.nature.com/articles/s41467-024-47461-8\n")
         f.write("#---------------------------------------------------------------------------\n")
         f.write("# Binding predictions with MixTCRpred model {0}\n".format(model_name))
         if good_model:

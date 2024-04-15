@@ -1,5 +1,5 @@
 # MixTCRpred
-MixTCRpred accurately predicts T-cell receptors (TCRs) recognizing several viral and cancer epitopes (peptides displayed on MHC molecules or pMHCs) using sequence data. Currently, binding predictions are available for 146 pMHCs. Accurate predictions were achieved for 43 pMHCs that have more than 50 training TCRs. [Here](https://www.biorxiv.org/content/10.1101/2023.09.13.557561v1) the paper describing MixTCRpred predictive performance and applications.
+MixTCRpred accurately predicts T-cell receptors (TCRs) recognizing several viral and cancer epitopes (peptides displayed on MHC molecules or pMHCs). Predictions are available for 146 pMHCs. Accurate predictions were achieved for 43 pMHCs that have more than 50 training TCRs. [Here](https://www.nature.com/articles/s41467-024-47461-8) the paper describing MixTCRpred predictive performance and applications.
 
 
 ## Run MixTCRpred with GoogleColab
