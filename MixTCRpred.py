@@ -143,9 +143,10 @@ if __name__ == '__main__':
     args.host = host_species
 
     #parse data if using model for NY-ESO-1(157-165) epitope from phage-display screening
-    input_file = src.utils.parse_A0201_SLLMWITQC_phage(args)
-    #change path to input file
-    args.test = input_file
+    if model_name == 'A0201_SLLWITQC_phage_display':
+        input_file = src.utils.parse_A0201_SLLMWITQC_phage(args)
+        #change path to input file
+        args.test = input_file
 
     #set config
     config = configparser.ConfigParser()
