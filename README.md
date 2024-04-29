@@ -105,7 +105,7 @@ Additional and optional arguments are:
 
 ## Download MixTCRpred pretrained models
 
-In the GitHub repository we include only two MixTCRpred models (A0201_GILGFVFT and A0201_ELAGIGILTV). 
+In the GitHub repository we include trhee MixTCRpred models (A0201_GILGFVFT and A0201_ELAGIGILTV, A0201_SLLWITQC_phage_display) as examples.
 You can download the pretrained MixTCRpred models from our [Zenodo dataset](https://doi.org/10.5281/zenodo.7930623)
 
 To download a specific pretrained model (e.g. A0201_NLVPMVATV) run:
@@ -122,6 +122,22 @@ To download the high-confidence 43 models (more than 50 training TCRs) run:
 ```bash
 python MixTCRpred.py --download_high
 ```
+
+## Usage for NY-ESO-1(157–165) (A0201_SLLMWITQC) - Phage-display data
+
+A phage display screening was used to generate MixTCRpred models for the NY-ESO-1(157–165) epitope (A0201_SLLMWITQC). The MixTCRpred model name is A0201_SLLMWITQC_phage_display. 
+Only TCR with TRBV6-5, TRBJ2-2, starting with "CASS" and ending with "GELFF" in the CDR3 beta are accepted.
+Those regions were not modified during the phage display experiment and the MixTCRpred model can not make reliable predictions for TCRs with other V,J genes or different N-, C- terminal.
+
+To utilize the corresponding MixTCRmodel, simply execute the following command.
+
+```bash
+python MixTCRpred.py --model A0201_SLLMWITQC_phage_display --input [input_TCR_file] --output [output_file]
+```
+
+Please refer to the specific license (LICENCE_A0201_SLLMWITQC_phage_display.md) in order to use this MixTCRpred model.
+
+
 
 ## Contact information
 
