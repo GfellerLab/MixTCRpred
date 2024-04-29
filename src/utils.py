@@ -111,6 +111,7 @@ def parse_A0201_SLLMWITQC_phage(args):
     print("-----------------------------------------------------------")
     print("# Using model trained on the data with the phage-display screeining #")
     df_input = pd.read_csv(args.input)
+    df_input = df_input.dropna(subset = ['TRBV', 'TRBJ', 'cdr3_TRB'])
     n_initial = len(df_input)
     v_gene = 'TRBV6-5'
     j_gene = 'TRBJ2-2'

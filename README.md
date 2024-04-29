@@ -123,11 +123,11 @@ To download the high-confidence 43 models (more than 50 training TCRs) run:
 python MixTCRpred.py --download_high
 ```
 
-## Usage for NY-ESO-1(157–165) (A0201_SLLMWITQC) - Phage-display data
+### Usage for A0201_SLLMWITQC_phage_display
 
-A phage display screening was used to generate MixTCRpred models for the NY-ESO-1(157–165) epitope (A0201_SLLMWITQC). The MixTCRpred model name is A0201_SLLMWITQC_phage_display. 
-Only TCR with TRBV6-5, TRBJ2-2, starting with "CASS" and ending with "GELFF" in the CDR3 beta are accepted.
-Those regions were not modified during the phage display experiment and the MixTCRpred model can not make reliable predictions for TCRs with other V,J genes or different N-, C- terminal.
+A phage display screening was used to generate MixTCRpred models for the NY-ESO-1<sub>157-165</sub> epitope (A0201_SLLMWITQC). The MixTCRpred model name is A0201_SLLMWITQC_phage_display. 
+Only TCR with TRBV6-5, TRBJ2-2, starting with "CASS" and ending with "GELFF" in the CDR3 beta are accepted as inputs, as those regions were not modified during the phage display experiment.
+The A0201_SLLMWITQC_phage_display MixTCRpred model can not make reliable predictions for TCRs with other V,J genes or different N-, C- terminal.
 
 To utilize the corresponding MixTCRmodel, simply execute the following command.
 
