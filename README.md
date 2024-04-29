@@ -125,17 +125,17 @@ python MixTCRpred.py --download_high
 
 ### Usage for A0201_SLLMWITQC_phage_display
 
-A phage display screening was used to generate MixTCRpred models for the NY-ESO-1<sub>157-165</sub> epitope (A0201_SLLMWITQC). 
+A phage display screening was used to generate TCR data for training the MixTCRpred models for the NY-ESO-1<sub>157-165</sub> epitope (A0201_SLLMWITQC). 
 
-The MixTCRpred model name is A0201_SLLMWITQC_phage_display. Only TCR with TRBV6-5, TRBJ2-2, starting with "CASS" and ending with "GELFF" in the CDR3 beta are accepted as inputs.
+The MixTCRpred model name is "A0201_SLLMWITQC_phage_display". Only TCR with TRBV6-5, TRBJ2-2, starting with "CASS" and ending with "GELFF" in the CDR3 beta are accepted as inputs.
 
-To utilize the corresponding MixTCRmodel, execute the following command:
+To utilize this MixTCRmodel, execute the following command:
 
 ```bash
 python MixTCRpred.py --model A0201_SLLMWITQC_phage_display --input [input_TCR_file] --output [output_file]
 ```
 
-Please refer to the license LICENCE_A0201_SLLMWITQC_phage_display.md in order to use this MixTCRpred model.
+Please refer to the license LICENCE_A0201_SLLMWITQC_phage_display.md in order to use "A0201_SLLMWITQC_phage_display" MixTCRpred model.
 
 
 
