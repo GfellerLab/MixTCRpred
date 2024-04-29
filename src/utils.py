@@ -106,39 +106,32 @@ def compute_perc_rank(model_name, d_model_anc, predicted_scores):
             all_perc_rank.append(perc_rank)
     return all_perc_rank
 
-#### to map to perc rank
-# DEPRECATED -> now compute  %rank from scores of 10.000 random ab TCRs
-#def get_perc_rank(score, epi, d_par, distr = stats.exponnorm):
-#    mean, std, popt1, popt2, popt3 = d_par.get(epi, [-1,-1,-1,-1,-1])
-#    if mean==std==popt1==popt2==popt3 == -1:
-#        pr = -1
-#        return pr
-#    else:
-#        popt = (popt1, popt2, popt3)
-#        score_test = (score - mean) / std
-#        pr = 1 - distr.cdf(score, *popt)#scipy.stats.percentileofscore(list_score_ref, score)
-#        pr = pr*100
-#        return pr
+###### Parse data if using model for NY-ESO-1(157-165) epitope from phage-display screening
+def parse_A0201_SLLMWITQC_phage(args):
+    print("-----------------------------------------------------------")
+    print("# Using model trained on the data with the phage-display screeining #")
+    df_input = pd.read_csv(args.input)
+    n_initial = len(df_input)
+    v_gene = 'TRBV6-5'
+    j_gene = 'TRBJ2-2'
+    pad_cdr3_TRA = 'XXXXXXXXX'
+    # 1. Keep only TCRs with the right V,J! All the rest will be removed
+    df_input = df_input.loc[df_input['TRBV'].str.contains(v_gene)]
+    df_input = df_input.loc[df_input['TRBJ'].str.contains(j_gene)]
+    n_final = len(df_input)
+    print("# The input file {0} contains {1} TCRbeta. Sequences with V,J genes different from {2} or {3} and not starting/ending with \"CASS\"/\"GELFF\" will be discarded ".format(args.input, n_initial, v_gene,j_gene))
+    print("# {0} TCRbeta sequences will be evaluated ({1} sequences discarded)  #".format(n_final, n_initial - n_final))
+    print("-----------------------------------------------------------")
+    df_input['epitope'] = 'SLLMWITQC'
+    df_input['cdr3_TRA'] = pad_cdr3_TRA
+    df_input['TRAV'] = 'X'
+    df_input['TRAJ'] = 'X'
+    path_input_parsed = '{0}_correctVJ'.format(args.input)
+    df_input.to_csv(path_input_parsed, index = False)
+    return path_input_parsed
 
-#####################################################################################################
-#OLD: to rm
-#####################################################################################################
-## for token generation
-#def make_dictionary_tok_int(n_ngrams):
-#    all_possible_token = []
-#    #for comb in itertools.combinations(valid_aa, n):
-#    for tok in itertools.product(valid_aa, repeat=n_ngrams):
-#        tok = ''.join(tok)
-#        all_possible_token.append(tok)
-#    d_tok_int = {tok:i for i,tok in enumerate(all_possible_token)}
-#    return d_tok_int
-#
-#def generate_ngrams(seq, n):
-#    tokens = [token for token in list(seq) if token != ""]
-#    ngrams = zip(*[tokens[i:] for i in range(n)])
-#    return [''.join(ngram) for ngram in ngrams]
-####################################################################################################
-# to integrate CDR1/2 (from Vgenes: check ./src/imgt)
+
+
 
 ####################################################################################################
 ### HOMO SAPIENS

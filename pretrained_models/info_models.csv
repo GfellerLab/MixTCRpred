@@ -145,4 +145,4 @@ H2-Kb_KGYVYQGL,KGYVYQGL,Vesicular stomatitis virus (VSV),MHCII,H2-Kb,MusMusculus
 B4402_QELIRQGTDY,QELIRQGTDY,Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2),MHCI,HLA-B*44:02,HomoSapiens,10,0.9333333333
 A0201_RLITGRLQSL,RLITGRLQSL,Severe acute respiratory syndrome coronavirus 2 (SARS-CoV-2),MHCI,HLA-A*02:01,HomoSapiens,10,0.7208333333
 A0201_YVLTWIVGA,YVLTWIVGA,Homo sapiens (Neoepitope),MHCI,HLA-A*02:01,HomoSapiens,10,0.7745920746
-A0201_SLLMWITQC,SLLMWITQC,Homo sapiens,MHCI,HLA-A*02:01,HomoSapiens,0,0
+A0201_SLLMWITQC_phage_display,SLLMWITQC,Homo sapiens - Model trained with phage-display data. Only TCRs with TRBV6-5 and TRBJ2-2 are accepted,MHCI,HLA-A*02:01,HomoSapiens,29688,0.97

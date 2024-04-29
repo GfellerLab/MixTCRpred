@@ -89,7 +89,7 @@ if __name__ == '__main__':
         sys.exit(0)
 
     print("#########################################################################")
-    print("###### MixTCRpred: a sequence-based predictor of TCR-pMHC interaction  ####")
+    print("####  MixTCRpred v1.0: a sequence-based predictor of TCR-pMHC interaction")
     print("#########################################################################")
     print("Path to pretrained models: {0}".format(path_pretrained_models))
     import torch
@@ -114,7 +114,7 @@ if __name__ == '__main__':
     args.train = None
     args.test = args.input
     args.out = args.output
-    args.epitope = args.model.split("_")[-1]
+    args.epitope = args.model.split("_")[1]
     args.path_checkpoint = os.path.join(path_pretrained_models, 'model_'+args.model+'.ckpt')
     args.epochs = 0
     args.num_workers = 1
@@ -141,6 +141,11 @@ if __name__ == '__main__':
     auc_internal = df_epi_info['AUC_5fold'].values[0]
     host_species = df_epi_info['Host_species'].values[0]
     args.host = host_species
+
+    #parse data if using model for NY-ESO-1(157-165) epitope from phage-display screening
+    input_file = src.utils.parse_A0201_SLLMWITQC_phage(args)
+    #change path to input file
+    args.test = input_file
 
     #set config
     config = configparser.ConfigParser()
@@ -176,7 +181,6 @@ if __name__ == '__main__':
             )
 
     trainer = pl.Trainer(accelerator="cpu", default_root_dir = path_model_folder, max_epochs = int(args.epochs), callbacks = [mc], logger = False) #use logger false to disable tensorboard
-    #trainer = pl.Trainer(accelerator="gpu", default_root_dir = path_model_folder, max_epochs = int(args.epochs), callbacks = [mc], logger = False) #use logger false to disable tensorboard
 
     #2. Predictions
     if args.test != None:
