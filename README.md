@@ -1,5 +1,5 @@
 # MixTCRpred
-MixTCRpred accurately predicts T-cell receptors (TCRs) recognizing several viral and cancer epitopes (peptides displayed on MHC molecules or pMHCs). Predictions are available for 146 pMHCs. Accurate predictions were achieved for 43 pMHCs that have more than 50 training TCRs. [Here](https://www.nature.com/articles/s41467-024-47461-8) the paper describing MixTCRpred predictive performance and applications.
+MixTCRpred is a predictor of interaction between T-cell receptors (TCRs) and viral and cancer epitopes (peptides displayed on MHC molecules or pMHCs). Predictions are available for 146 pMHCs. [Here](https://www.nature.com/articles/s41467-024-47461-8) the paper describing MixTCRpred predictive performance and applications. Accurate predictions were achieved for 43 pMHCs that have more than 50 training TCRs.
 
 
 ## Run MixTCRpred with GoogleColab
@@ -125,17 +125,17 @@ python MixTCRpred.py --download_high
 
 ### Usage for A0201_SLLMWITQC_phage_display
 
-A phage display screening was used to generate MixTCRpred models for the NY-ESO-1<sub>157-165</sub> epitope (A0201_SLLMWITQC). The MixTCRpred model name is A0201_SLLMWITQC_phage_display. 
-Only TCR with TRBV6-5, TRBJ2-2, starting with "CASS" and ending with "GELFF" in the CDR3 beta are accepted as inputs, as those regions were not modified during the phage display experiment.
-The A0201_SLLMWITQC_phage_display MixTCRpred model can not make reliable predictions for TCRs with other V,J genes or different N-, C- terminal.
+A phage display screening was used to generate MixTCRpred models for the NY-ESO-1<sub>157-165</sub> epitope (A0201_SLLMWITQC). 
 
-To utilize the corresponding MixTCRmodel, simply execute the following command.
+The MixTCRpred model name is A0201_SLLMWITQC_phage_display. Only TCR with TRBV6-5, TRBJ2-2, starting with "CASS" and ending with "GELFF" in the CDR3 beta are accepted as inputs.
+
+To utilize the corresponding MixTCRmodel, execute the following command:
 
 ```bash
 python MixTCRpred.py --model A0201_SLLMWITQC_phage_display --input [input_TCR_file] --output [output_file]
 ```
 
-Please refer to the specific license (LICENCE_A0201_SLLMWITQC_phage_display.md) in order to use this MixTCRpred model.
+Please refer to the license LICENCE_A0201_SLLMWITQC_phage_display.md in order to use this MixTCRpred model.
 
 
 
