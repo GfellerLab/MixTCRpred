@@ -127,9 +127,9 @@ python MixTCRpred.py --download_high
 
 A phage display screening was used to generate TCR data for training the MixTCRpred models for the NY-ESO-1<sub>157-165</sub> epitope (A0201_SLLMWITQC). 
 
-The MixTCRpred model name is "A0201_SLLMWITQC_phage_display". Only TCR with TRBV6-5, TRBJ2-2, starting with "CASS" and ending with "GELFF" in the CDR3 beta are accepted as inputs.
+The MixTCRpred model name is "A0201_SLLMWITQC_phage_display". For this specific MixTCRpred model, **only TCRs with TRBV6-5, TRBJ2-2, beginning with "CASS" and ending with "GELFF" in the CDR3 beta will be accepted as inputs. The TCR alpha chain sequences are not used for predicting the TCR specificity and are discarded.**
 
-To utilize this MixTCRmodel, execute the following command:
+To utilize the "A0201_SLLMWITQC_phage_display" MixTCRmodel, execute the following command:
 
 ```bash
 python MixTCRpred.py --model A0201_SLLMWITQC_phage_display --input [input_TCR_file] --output [output_file]
@@ -147,4 +147,4 @@ For license-related questions, please contact [Nadette Bulgin](mailto:nbulgin@lc
 
 ## Acknowledgments
 
-This project received funding from the European Union's Horizon 2020 research and innovation programme under the Marie Skłodowska-Curie grant agreement, No. 101027973, [MT-PoINT project](https://cordis.europa.eu/project/id/101027973)
+This project received funding from the European Union's Horizon 2021 research and innovation programme under the Marie Skłodowska-Curie grant agreement, No. 101027973, [MT-PoINT project](https://cordis.europa.eu/project/id/101027973)
