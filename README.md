@@ -105,7 +105,7 @@ Additional and optional arguments are:
 
 ## Download MixTCRpred pretrained models
 
-In the GitHub repository we include trhee MixTCRpred models (A0201_GILGFVFT and A0201_ELAGIGILTV, A0201_SLLWITQC_phage_display) as examples.
+In the GitHub repository we include trhee MixTCRpred models (A0201_GILGFVFT and A0201_ELAGIGILTV, A0201_A0201_NY-ESO-1-CDR3b) as examples.
 You can download the pretrained MixTCRpred models from our [Zenodo dataset](https://doi.org/10.5281/zenodo.7930623)
 
 To download a specific pretrained model (e.g. A0201_NLVPMVATV) run:
@@ -123,19 +123,19 @@ To download the high-confidence 43 models (more than 50 training TCRs) run:
 python MixTCRpred.py --download_high
 ```
 
-### Usage for A0201_SLLMWITQC_phage_display
+### Usage for A0201_NY-ESO-1-CDR3b
 
-A phage display screening was used to generate TCR data for training the MixTCRpred models for the NY-ESO-1<sub>157-165</sub> epitope (A0201_SLLMWITQC). 
+A phage display screening was used to generate TCR data for training the MixTCRpred models for the NY-ESO-1<sub>157-165</sub> epitope. 
 
-The MixTCRpred model name is "A0201_SLLMWITQC_phage_display". For this specific MixTCRpred model, **only TCRs with TRBV6-5, TRBJ2-2, beginning with "CASS" and ending with "GELFF" in the CDR3 beta will be accepted as inputs. The TCR alpha chain sequences are not used for predicting the TCR specificity and are discarded.**
+The MixTCRpred model name is "A0201_NY-ESO-1-CDR3b". For this specific MixTCRpred model, **only TCRs with TRBV6-5, TRBJ2-2, beginning with "CASS" and ending with "GELFF" in the CDR3 beta will be accepted as inputs. The TCR alpha chain sequences are not used for predicting the TCR specificity and are discarded.**
 
-To utilize the "A0201_SLLMWITQC_phage_display" MixTCRmodel, execute the following command:
+To utilize the "A0201_NY-ESO-1-CDR3b" MixTCRmodel, execute the following command:
 
 ```bash
-python MixTCRpred.py --model A0201_SLLMWITQC_phage_display --input [input_TCR_file] --output [output_file]
+python MixTCRpred.py --model A0201_NY-ESO-1-CDR3b --input [input_TCR_file] --output [output_file]
 ```
 
-Please refer to the license LICENCE_A0201_SLLMWITQC_phage_display.md in order to use "A0201_SLLMWITQC_phage_display" MixTCRpred model.
+Please refer to the license LICENCE_A0201_NY-ESO-1-CDR3b.md in order to use "A0201_NY-ESO-1-CDR3b" MixTCRpred model.
 
 
 

@@ -107,7 +107,7 @@ def compute_perc_rank(model_name, d_model_anc, predicted_scores):
     return all_perc_rank
 
 ###### Parse data if using model for NY-ESO-1(157-165) epitope from phage-display screening
-def parse_A0201_SLLMWITQC_phage(args):
+def parse_A0201_NY_ESO_1(args):
     print("-----------------------------------------------------------")
     print("# Using model trained on the data with the phage-display screeining #")
     df_input = pd.read_csv(args.input)
