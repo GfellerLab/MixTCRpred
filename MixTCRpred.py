@@ -181,7 +181,7 @@ if __name__ == '__main__':
             monitor='val_loss'
             )
 
-    trainer = pl.Trainer(accelerator="gpu", default_root_dir = path_model_folder, max_epochs = int(args.epochs), callbacks = [mc], logger = False) #use logger false to disable tensorboard
+    trainer = pl.Trainer(accelerator="cpu", default_root_dir = path_model_folder, max_epochs = int(args.epochs), callbacks = [mc], logger = False) #use logger false to disable tensorboard
 
     #2. Predictions
     if args.test != None:

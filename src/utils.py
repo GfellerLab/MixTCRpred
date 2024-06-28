@@ -124,9 +124,18 @@ def parse_A0201_NY_ESO_1(args):
     print("# {0} TCRbeta sequences will be evaluated ({1} sequences discarded)  #".format(n_final, n_initial - n_final))
     print("-----------------------------------------------------------")
     df_input['epitope'] = 'SLLMWITQC'
-    df_input['cdr3_TRA'] = pad_cdr3_TRA
-    df_input['TRAV'] = 'X'
-    df_input['TRAJ'] = 'X'
+    #for the alpha chain
+    # if 1G4 alpha chain: TRAV21_CAVRPTSGGSYIPTF_TRAJ6 -> then accept it
+    df_input_1g4 = df_input.loc[df_input['cdr3_TRA'] == 'CAVRPTSGGSYIPTF']
+    df_input_1g4 = df_input_1g4.loc[df_input_1g4['TRAV'].str.contains('TRAV21')]
+    df_input_1g4 = df_input_1g4.loc[df_input_1g4['TRAJ'].str.contains('TRAJ6')]
+    # if different alpha alpha -> replace with 'pad_cdr3_TRA'
+    df_input_different_alpha = df_input.loc[df_input['cdr3_TRA'] != 'CAVRPTSGGSYIPTF']
+    df_input_different_alpha['cdr3_TRA'] = pad_cdr3_TRA
+    df_input_different_alpha['TRAV'] = 'X'
+    df_input_different_alpha['TRAJ'] = 'X'
+    #now concat them
+    df_input = pd.concat([df_input_1g4, df_input_different_alpha])
     path_input_parsed = '{0}_correctVJ'.format(args.input)
     df_input.to_csv(path_input_parsed, index = False)
     return path_input_parsed
