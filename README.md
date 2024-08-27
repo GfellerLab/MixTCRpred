@@ -8,7 +8,7 @@ This branch is specifically for the NY-ESO-1<sub>157-165</sub> epitope. As descr
 
 For this MixTCRpred model:
 
-- **Only TCRs with TRBV6-5, TRBJ2-2, beginning with "CASS" and ending with "GELFF" in the CDR3 beta will be accepted as inputs. All other sequences will be discarded.***
+- **Only TCRs with TRBV6-5, TRBJ2-2, beginning with "CASS" and ending with "GELFF" in the CDR3 beta will be accepted as inputs. All other sequences will be discarded.**
 - The alpha chain sequences are not used for predicting the TCR specificity. TCRs with alpha chain sequences equal to the reference TCR used in the phage display screening (TRAV21 | CAVRPTSGGSYIPTF | TRAJ6) are accepted as inputs, while other alpha chains will be replaced by null values.
 
 
