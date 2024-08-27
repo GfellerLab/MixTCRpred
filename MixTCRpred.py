@@ -80,7 +80,7 @@ if __name__ == '__main__':
         sys.exit(0)
 
     if args.download != None:
-        print('Downloading TCrpred model for {0})'.format(args.download))
+        print('Downloading MixTCRpred model for {0})'.format(args.download))
         url = "https://zenodo.org/record/7930623/files/model_"+args.download+".ckpt"
         if os.path.exists( os.path.join(path_pretrained_models, "model_{0}.ckpt".format(args.download))):
             print("{0} MixTCRpred model already downloaded".format(args.download))
